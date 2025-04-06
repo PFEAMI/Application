@@ -22,9 +22,7 @@ pipeline {
                     def new_files = ['file1.txt', 'file2.txt']
 
                     // Exécution du playbook Ansible
-                    sh '''#!/bin/bash
-                    ansible-playbook -i /home/vagrant/sync_project/hosts.ini /home/vagrant/sync_project/playbooks/sync.yml
-                    '''
+                    sh 'ansible-playbook -i /home/vagrant/sync_project/hosts.ini /home/vagrant/sync_project/playbooks/sync.yml'
 
                     // Mettre à jour les variables après synchronisation si nécessaire
                     sync_result.rc = 0  // Code de retour de la synchronisation
@@ -32,23 +30,17 @@ pipeline {
                     source_files = ['file1.txt', 'file2.txt']  // Fichiers sources après synchronisation
                     dest_files = ['file1.txt', 'file2.txt']  // Fichiers de destination après synchronisation
 
-                    // Calculer la taille des fichiers dans le répertoire destination (en Ko)
-                    def dest_files_size_kb = sh(script: """
-                        find ${dest_dir} -type f -name "*.txt" -exec stat --format="%s" {} \\; | awk '{s+=$1} END {print s/1024}'
-                    """, returnStdout: true).trim()
-
                     // Passer les variables au script Bash
                     sh """
-                    /bin/bash /home/vagrant/scripts/generate_report.sh \\
-                    '${sync_result.rc}' \\
-                    '${sync_duration}' \\
-                    '${dest_files.size()}' \\
-                    '${source_files.size()}' \\
-                    '${source_files.size()}' \\
-                    '${dest_files_size_kb}' \\
-                    '${source_dir}' \\
-                    '${dest_dir}' \\
-                    '${notification_email}' \\
+                    /bin/bash /home/vagrant/scripts/generate_report.sh \
+                    '${sync_result.rc}' \
+                    '${sync_duration}' \
+                    '${dest_files.size()}' \
+                    '${source_files.size()}' \
+                    '${(dest_files.collect { it.size() }.sum() / 1024).round(2)}' \
+                    '${source_dir}' \
+                    '${dest_dir}' \
+                    '${notification_email}' \
                     '${new_files.join('; ')}'
                     """
                 }
