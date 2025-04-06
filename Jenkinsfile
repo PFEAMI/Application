@@ -13,12 +13,30 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/PFEAMI/Application.git'
             }
         }
-
+        
         stage('Ansible Synchronisation') {
             steps {
                 // Exécuter le playbook Ansible
                 sh """
                     ansible-playbook -i ${ANSIBLE_INVENTORY} ${PLAYBOOK_PATH}
+                """
+            }
+        }
+
+        stage('Send Report') {
+            steps {
+                // Exécuter le script pour envoyer un rapport par email
+                sh """
+                    /bin/bash /home/vagrant/scripts/generate_report.sh \
+                    "{{ sync_result.rc }}" \
+                    "{{ sync_duration }}" \
+                    "{{ dest_files.files | length }}" \
+                    "{{ source_files.files | length }}" \
+                    "{{ (dest_files.files | map(attribute='size') | sum / 1024) | round(2) }}" \
+                    "{{ source_dir }}" \
+                    "{{ dest_dir }}" \
+                    "{{ notification_email }}" \
+                    "{{ new_files | join('; ') }}"
                 """
             }
         }
@@ -33,3 +51,4 @@ pipeline {
         }
     }
 }
+
