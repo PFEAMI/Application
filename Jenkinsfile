@@ -37,7 +37,7 @@ pipeline {
                     '${sync_duration}' \
                     '${dest_files.size()}' \
                     '${source_files.size()}' \
-                    '${(dest_files.collect { it.size() }.sum() / 1024).round(2)}' \
+                    '${(dest_files.collect { new File(dest_dir, it).length() }.sum() / 1024).setScale(2, BigDecimal.ROUND_HALF_UP)}' \
                     '${source_dir}' \
                     '${dest_dir}' \
                     '${notification_email}' \
