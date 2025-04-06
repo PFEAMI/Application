@@ -22,7 +22,8 @@ pipeline {
                     def new_files = ['file1.txt', 'file2.txt']
 
                     // Exécution du playbook Ansible
-                    sh 'ansible-playbook -i /home/vagrant/sync_project/hosts.ini /home/vagrant/sync_project/playbooks/sync.yml'
+		    sh '''#!/bin/bash
+                    ansible-playbook -i /home/vagrant/sync_project/hosts.ini /home/vagrant/sync_project/playbooks/sync.yml
 
                     // Mettre à jour les variables après synchronisation si nécessaire
                     sync_result.rc = 0  // Code de retour de la synchronisation
