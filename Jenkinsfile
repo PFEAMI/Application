@@ -11,6 +11,7 @@ pipeline {
         stage('Synchronisation avec Ansible') {
             steps {
                 script {
+		    sh '''#!/bin/bash
                     // Définir toutes les variables dans le script
                     def sync_result = [rc: 0] // Code de retour de la synchronisation
                     def sync_duration = 30 // Durée de la synchronisation
