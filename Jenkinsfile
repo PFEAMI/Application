@@ -33,7 +33,9 @@ pipeline {
                     dest_files = ['file1.txt', 'file2.txt']  // Fichiers de destination après synchronisation
 
                     // Calculer la taille des fichiers dans le répertoire destination (en Ko)
-                    def dest_files_size_kb = dest_files.collect { new File("${dest_dir}/${it}").length() / 1024 }.sum()
+                    def dest_files_size_kb = sh(script: """
+                        find ${dest_dir} -type f -name "*.txt" -exec stat --format="%s" {} \\; | awk '{s+=$1} END {print s/1024}'
+                    """, returnStdout: true).trim()
 
                     // Passer les variables au script Bash
                     sh """
@@ -43,7 +45,7 @@ pipeline {
                     '${dest_files.size()}' \\
                     '${source_files.size()}' \\
                     '${source_files.size()}' \\
-                    '${new BigDecimal(dest_files_size_kb).setScale(2, BigDecimal.ROUND_HALF_UP)}' \\
+                    '${dest_files_size_kb}' \\
                     '${source_dir}' \\
                     '${dest_dir}' \\
                     '${notification_email}' \\
