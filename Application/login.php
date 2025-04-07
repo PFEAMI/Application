@@ -10,7 +10,7 @@
     <div class="container">
         <h2>Connexion</h2>
         <?php if (isset($_GET['signup']) && $_GET['signup'] === 'success'): ?>
-            <p class="success">Inscription réussie! Veuillez vous connecter.</p>
+            <p class="success">Inscription réussie ! Veuillez vous connecter Merci beaucoup.</p>
         <?php endif; ?>
         <form action="process_login.php" method="post">
             <div class="form-group">
