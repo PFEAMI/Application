@@ -1,0 +1,12 @@
+# Redirection vers login.php en cas de répertoire sans index
+DirectoryIndex index.php login.php
+
+
+
+# Réécriture d'URL pour gérer les pages non trouvées
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Redirige vers une page 404 si le fichier n'est pas trouvé
+ErrorDocument 404 /404.php
