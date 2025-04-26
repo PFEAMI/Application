@@ -33,7 +33,12 @@ if (!isset($_SESSION['user_id'])) {
                     <option value="medium">Moyenne</option>
                     <option value="high">Haute</option>
                 </select>
+	    </div>
+	    <div class="form-group">
+                <label for="telephone">Numéro de téléphone :</label>
+                <input type="tel" id="telephone" name="telephone" placeholder="ex : 55 000 000" required>
             </div>
+
             <button type="submit" class="btn">Créer l'alerte</button>
         </form>
         <a href="dashboard.php" class="btn">Retour au tableau de bord</a>
